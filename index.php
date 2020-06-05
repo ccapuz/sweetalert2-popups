@@ -8,14 +8,53 @@
 </head>
 <body>
     <button id='norm'>Normal Pop-up</button>
+    <button id='with-image'>With Image Pop-up</button>
     <button id='long-content'>Long Content Pop-up</button>
     <button id='aria-labels'>Aria Labels Pop-up</button>
-    <button id='aria-labels'>Top Right Pop-up</button>
+    <button id='top-right'>Top Right Pop-up</button>
+    <button id='email-list'>Email Pop-up</button>
+    <button id='custom-background'>Custom Background Pop-up</button>
 
     <script src="jquery-3.5.1.min.js"></script>
     <script src="sweetalert2.all.min.js"></script>
 
     <script>
+        // Uses async() for pop-up
+        (async () => {
+
+        const { value: email } = await Swal.fire({
+        title: 'Sign up for our newsletter!',
+        input: 'email',
+        inputPlaceholder: 'Enter your email address',
+        showCloseButton: true
+        })
+
+        // Checks if email is valid
+        if (email) {
+        Swal.fire(`Entered email: ${email}`)
+        }
+
+        })()
+
+        // Manual button pop-up for email list
+        $('#email-list').on('click', function(){
+            Swal.fire({
+            title: 'Sign up for our newsletter!',
+            input: 'email',
+            inputPlaceholder: 'Enter your email address',
+            imageUrl: 'https://ezeventplanning.net/wp-content/uploads/2020/03/logo-smaller-1024x322.png',
+            imageWidth: 300,
+            imageHeight: 100,
+            imageAlt: 'EasyEventPlanning'
+            })
+
+            // Checks if email is valid
+            if (email) {
+            Swal.fire(`Entered email: ${email}`)
+            }
+        })
+
+        // Normal pop-up
         $('#norm').on('click', function(){
             Swal.fire({
             icon: 'info',
@@ -25,6 +64,19 @@
             })
         })
 
+        // Pop-up with image
+        $('#with-image').on('click', function(){
+            Swal.fire({
+            title: 'Easy Event Planning',
+            text: 'Helping the Event Industry Recover from Covid',
+            imageUrl: 'https://ezeventplanning.net/wp-content/uploads/2020/03/logo-smaller-1024x322.png',
+            imageWidth: 300,
+            imageHeight: 100,
+            imageAlt: 'EasyEventPlanning',
+            })
+        })
+        
+        // Long window pop-up
         $('#long-content').on('click', function(){
             Swal.fire({
                 title: 'Long Content',
@@ -34,7 +86,8 @@
                 imageAlt: 'A tall image'
             })
         })
-
+        
+        // Pop-up with Aria Labels
         $('#aria-labels').on('click', function(){
             Swal.fire({
             title: '<strong>HTML <u>example</u></strong>',
@@ -54,16 +107,33 @@
             })
         })
 
-        $('#long-content').on('click', function(){
+        // Pop-up that shows on top right - can be adjusted anywhere
+        $('#top-right').on('click', function(){
             Swal.fire({
             position: 'top-end',
-            icon: 'success',
-            title: 'Your work has been saved',
-            showConfirmButton: false,
+            icon: 'warning',
+            title: 'Warning!',
+            showConfirmButton: true,
             timer: 1500
             })
         })
 
+        // Custom background pop-up
+        $('#custom-background').on('click', function(){
+            Swal.fire({
+            title: 'Custom width, padding, background. You can also insert picture anywhere on the background.',
+            width: 600,
+            padding: '3em',
+            background: '#fff url(/images/trees.png)',
+            backdrop: `
+                rgba(6, 42, 94,0.7)
+                url("https://media.tenor.com/images/b1c17afeeb5a58ec308201ec5ddfb04c/tenor.gif")
+                center top
+                no-repeat
+            `
+            })
+        })
+        
     </script>
 
 </body>
