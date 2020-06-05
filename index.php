@@ -6,14 +6,20 @@
     <title>Pop-ups</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
-    <button id='norm'>Normal Pop-up</button>
-    <button id='with-image'>With Image Pop-up</button>
-    <button id='long-content'>Long Content Pop-up</button>
-    <button id='aria-labels'>Aria Labels Pop-up</button>
-    <button id='top-right'>Top Right Pop-up</button>
-    <button id='email-list'>Email Pop-up</button>
-    <button id='custom-background'>Custom Background Pop-up</button>
+<body style="text-align:center;">
+    <h1>Sweet Alert 2 Custom and Responsive Pop-ups</h1>
+    <div>
+        <button id='norm'>Normal Pop-up</button>
+        <button id='with-image'>With Image Pop-up</button>
+        <button id='long-content'>Long Content Pop-up</button>
+        <button id='aria-labels'>Aria Labels Pop-up</button>
+        <button id='top-right'>Top Right Pop-up</button>
+        <button id='email-list'>Email Pop-up</button>
+        <button id='custom-background'>Custom Background Pop-up</button>
+        <button id='ajax'>AJAX Request Pop-up</button>
+        <button id='sign-up'>Sign Up Pop-up</button>
+    </div>
+    <h1>Source/Documentation: https://sweetalert2.github.io/#input-types</h1>
 
     <script src="jquery-3.5.1.min.js"></script>
     <script src="sweetalert2.all.min.js"></script>
@@ -112,19 +118,20 @@
             Swal.fire({
             position: 'top-end',
             icon: 'warning',
-            title: 'Warning!',
+            title: 'Warning! This pop-up will close in 3 seconds!',
             showConfirmButton: true,
-            timer: 1500
+            timer: 3000
             })
         })
 
         // Custom background pop-up
         $('#custom-background').on('click', function(){
             Swal.fire({
-            title: 'Custom width, padding, background. You can also insert picture anywhere on the background.',
+            title: 'Custom width, padding, background. You can also insert picture/gif anywhere on the backdrop.',
             width: 600,
             padding: '3em',
             background: '#fff url(/images/trees.png)',
+            showCloseButton: true,
             backdrop: `
                 rgba(6, 42, 94,0.7)
                 url("https://media.tenor.com/images/b1c17afeeb5a58ec308201ec5ddfb04c/tenor.gif")
@@ -133,7 +140,71 @@
             `
             })
         })
+
+        // AJAX Request pop-up
+        $('#ajax').on('click', function(){
+            Swal.fire({
+            title: 'Submit your Github username',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Look up',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch(`//api.github.com/users/${login}`)
+                .then(response => {
+                    if (!response.ok) {
+                    throw new Error(response.statusText)
+                    }
+                    return response.json()
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(
+                    `Request failed: ${error}`
+                    )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                title: `${result.value.login}'s avatar`,
+                imageUrl: result.value.avatar_url
+                })
+            }
+            })
+        })
         
+        // Sign-up pop-up
+        $('#sign-up').on('click', function(){
+            Swal.mixin({
+                input: 'text',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: true,
+                progressSteps: ['1', '2', '3']
+            }).queue([
+                {
+                    title: 'Name of Business',
+                    text: 'What is the name of the business you wish to add?'
+                },
+                'Business Category',
+                'Name of Owner/Manager'
+            ]).then((result) => {
+                if (result.value) {
+                    const answers = JSON.stringify(result.value)
+                    Swal.fire({
+                        title: 'All done!',
+                        html: `
+                            Your answers:
+                            <pre><code>${answers}</code></pre>
+                        `,
+                        confirmButtonText: 'Done!'
+                    })
+                }
+            })
+        })
     </script>
 
 </body>
